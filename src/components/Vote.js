@@ -6,8 +6,9 @@ import { updateVote } from '../actions'
 
 const Vote = ({ post, updateVote }) => {
 
-    const voteUp = () => updateVote({ id:post.id, option:'upVote' });
-    const voteDown = () => updateVote({ id:post.id, option:'downVote' });
+    const type = post.parentId ? 'comments' : 'posts';
+    const voteUp = () => updateVote({ type:type, id:post.id, option:'upVote' });
+    const voteDown = () => updateVote({ type:type, id:post.id, option:'downVote' });
 
     return (
         <div className="post-vote">

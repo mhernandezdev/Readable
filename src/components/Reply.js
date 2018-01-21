@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addComment } from '../actions'
+import { addPost } from '../actions'
 
 class Reply extends Component {
     state = {
@@ -12,17 +12,12 @@ class Reply extends Component {
     }
 
     addReplyClicked = () => {
-        this.setState((prevState, props) => {
-            return {display: !prevState.display };
-        });
+        this.setState((prevState) => { return {display: !prevState.display} });
     }
 
-    handleAuthorChange = (e) => {
-        this.setState({ author: e.target.value, authorFail:e.target.value==='' });
-    }
-
-    handleBodyChange = (e) => {
-        this.setState({ body: e.target.value, bodyFail:e.target.value==='' });
+    handleTextChange = (e) => {
+        const {name, value} = e.target;
+        this.setState({ [name]:value, [`${name}Fail`]:value==='' });
     }
 
     handlePost = (e) => {
@@ -30,44 +25,53 @@ class Reply extends Component {
 
         // some validation
         const { author, body } = this.state;
-        if(author==='' || body===''){
-            this.setState({ authorFail:author==='', bodyFail:body==='' });
-        }else{
+        this.setState({ authorFail:author==='', bodyFail:body==='' });
+
+        const {authorFail, bodyFail} = this.state;
+        if(!authorFail || !bodyFail){
             // call addComment
-            const comment = {
-                        parentId: this.props.parentId,
-                        id: Math.random().toString(36).substr(-8),
-                        timestamp: Date.now(),
-                        author,
-                        body
-                    }
-            this.props.addComment(comment);
+            const data = {
+                parentId: this.props.parentId,
+                id: Math.random().toString(36).substr(-8),
+                timestamp: Date.now(),
+                author,
+                body
+            }
+            this.props.addPost({type:"comments", body:data});
 
             // clear and close the reply form
-
+            this.setState((prevState) => {
+                return { author:'', body:'', display: false };
+            });
         }
     }
 
     render() {
         const { display, author, body, authorFail, bodyFail   } = this.state;
+        const { comments } = this.props;
 
         return (
             <div className="post-add-comment">
-                <div><span className="post-reply-txt">Replies</span> <span onClick={this.addReplyClicked}>Add a Reply</span></div>
+                <div>
+                    {comments && <span className="post-reply-txt">Replies</span> }
+                    <span className="post-add-reply-txt" onClick={this.addReplyClicked}>Add a Reply</span>
+                </div>
                 { display &&
                     <form onSubmit={this.handlePost}>
                         <input
                         type="text"
                         autoFocus placeholder="Author"
+                        name="author"
                         value={author}
-                        onChange={this.handleAuthorChange}
+                        onChange={this.handleTextChange}
                         className={authorFail ? 'FAIL' : ''}
                         />
 
                         <textarea
                         placeholder="Leave a reply"
+                        name="body"
                         value={body}
-                        onChange={this.handleBodyChange}
+                        onChange={this.handleTextChange}
                         className={bodyFail ? 'FAIL' : ''}
                         />
                         <button>Post</button>
@@ -80,7 +84,7 @@ class Reply extends Component {
 
 function mapDispatchToProps (dispatch) {
     return {
-        addComment: (data) => dispatch(addComment(data))
+        addPost: (data) => dispatch(addPost(data))
     }
 }
 

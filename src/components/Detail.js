@@ -1,75 +1,119 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchPost, fetchComment } from '../actions'
+import { deletePost } from '../actions'
+import Modal from 'react-modal'
+import Post from './Post'
+import PostForm from './PostForm'
 import FaAngleLeft from 'react-icons/lib/fa/angle-left'
 
 class Detail extends Component {
+    static defaultProps = {
+        create:false
+    }
+    state = {
+        edit: false,
+        deleteModalOpen: false
+    }
 
+    post = {};
+    linkTo = '/';
 
+    edit(){
+        this.setState((prevState) => { return { edit: !prevState.edit } });
 
-    componentDidMount(){
-        // who am I
-        console.log("Detail ------ componentDidMount", this.props, this.props.history)
-        console.log('Detail this.props.match.params ',this.props.match.params )
+        // create fires back
+        this.props.create && this.props.history.push(this.linkTo);
+    }
 
-        const {parentid, id} = this.props.match.params;
-        this.props.fetchPost(parentid || id);
+    delete(){
+        this.setState(() => { return { deleteModalOpen: true } });
+    }
+
+    deleteNo(){
+        this.setState(() => { return { deleteModalOpen: false } });
+    }
+
+    deleteYes(){
+        // if yes // calls back button //calls action
+        const { id } = this.props.match.params;
+        const post = this.post;
+        this.props.deletePost({ type:post.parentId ? 'comments' : 'posts' , id:id, parentId:post.parentId });
+        this.setState(() => { return { deleteModalOpen: false } });
+        this.props.history.push(this.linkTo);
     }
 
     render() {
-        //const { previous } = this.props;
+        const { posts, comments, create } = this.props;
+        const {category, id, parentid} = this.props.match.params;
+        const { edit, deleteModalOpen } = this.state;
 
-        const {category, id} = this.props.match.params;
-        let linkTo = `/${category}/post/`;
-        if(this.props.match.params.parentId){
-            linkTo += this.props.match.params.parentId;
+        // back link
+        let linkTo = (category && `/category/${category}`) || `/`;
+        if(id && parentid){
+            linkTo += `/post/${parentid}`;
         }
+        this.linkTo = linkTo;
 
-        console.log('category ??????? ', category)
+        //const me = post;
+        const me = posts[id] || comments[id];
+        const type = me && me.parentId ? 'comments' : 'posts';
+        this.post = me;
 
 
         return (
             <div className="detail">
-
+                <div className="header-child">
+                    {!create && <div className="detail-ui-btns">
+                        <div className="button edit-btn" onClick={() => this.edit()} >Edit</div>
+                        <div className="button delete-btn" onClick={(e) => this.delete(e)} >Delete</div>
+                    </div>}
                     <Link className='close-btn' to={linkTo} >
-                    <div className="header-close">
-                        <FaAngleLeft size={30} />
-                        </div>
+                        <FaAngleLeft size={30} /> Back
                     </Link>
+                </div>
 
                 <div className="main">
-                <h1>Detail</h1>
+                    <h1>{create ? 'Create' : 'Detail'}</h1>
 
-                {/* edit button */}
-
-                {/* form or single comment */}
-
-
-
-                Title, Body, Author, timestamp (in user readable format), and vote score
-                <form>
-                    <input type="text" placeholder="Title" value="" />
-                    <input type="text" placeholder="Comment" value=""  />
-                    <button type="submit">Submit</button>
-                </form>
-
-
+                    {/* form or single comment */}
+                    { !edit && me && <Post post={me} category={category} id={id} detail={true}></Post> }
+                    { (create || edit) &&
+                        <PostForm post={me}
+                        type={type}
+                        mode={create ? 'new' : 'edit'}
+                        edit={() => this.edit()} />
+                    }
 
                 </div>
+
+                <Modal
+                className='modal'
+                overlayClassName='overlay'
+                isOpen={deleteModalOpen}
+                onRequestClose={this.deleteModalClose}
+                appElement={document.getElementById('root')}
+                contentLabel='Modal'
+                >
+                    <div>
+                        <p>Are you sure you want to delete?</p>
+                        <div className="button" onClick={(e) => this.deleteNo(e)}>No</div>
+                        <div className="button" onClick={(e) => this.deleteYes(e)}>Yes, delete.</div>
+                    </div>
+                </Modal>
             </div>
         )
     }
 }
 
-function mapStateToProps({previous}) {
-  return {previous}
+function mapStateToProps({ posts, comments }) {
+  return { posts, comments }
 }
+
 function mapDispatchToProps (dispatch) {
     return {
-        fetchPost: (id) => dispatch(fetchPost()),
-        fetchComment: () => dispatch(fetchComment())
+        deletePost: (data) => dispatch(deletePost(data)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Detail);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Detail));

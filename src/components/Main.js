@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts, fetchCategories } from '../actions'
 import { withRouter, Link } from 'react-router-dom'
-import Comment from './Comment'
+import Post from './Post'
 import Categories from './Categories'
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle'
 
@@ -11,21 +10,15 @@ class Main extends Component {
         sorton:'newest',
     }
 
-    componentDidMount(){
-        this.props.fetchPosts();
-        this.props.fetchCategories();
-    }
-
     sortOnChange(e){
         this.setState({sorton: e.target.value});
     }
 
     render() {
-        const { categories, posts, comments } = this.props;
+        const { categories, posts } = this.props;
         const { sorton } = this.state;
 
         const category = this.props.match.params.category || 'all';
-        const id = this.props.match.params.id;
 
         // reduce by category and sort // convert post into an array
         const postArray = Object.values(posts);
@@ -55,14 +48,14 @@ class Main extends Component {
                             </h2>
 
                             {postSorted && postSorted.map(post => (
-                                <Comment key={post.id} category={category} post={post} id={id}></Comment>
+                                <Post key={post.id} category={category} post={post} ></Post>
                             ))}
                         </div>
                     </div>
                 </div>
 
                 <Link
-                to={`${category}/post/create`}
+                to={`/category/${category}/create`}
                 className='add-comment'
                 > <FaPlusCircle size={60}/> </Link>
 
@@ -71,19 +64,11 @@ class Main extends Component {
   }
 }
 
-function mapStateToProps ({ categories, posts, comments }) {
-    return { categories, posts, comments };
-}
-
-function mapDispatchToProps (dispatch) {
-    return {
-        fetchPosts: () => dispatch(fetchPosts()),
-        fetchCategories: () => dispatch(fetchCategories())
-    }
+function mapStateToProps ({ categories, posts }) {
+    return { categories, posts };
 }
 
 export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(Main))
 

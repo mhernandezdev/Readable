@@ -2,52 +2,41 @@ import { combineReducers } from 'redux'
 
 import {
     FETCH_CATEGORIES,
+
     FETCH_POSTS,
-    DELETE_POST,
+    UPDATE_POSTS,
+    ADD_POSTS,
+    DELETE_POSTS,
+    UPDATE_VOTE_POSTS,
+
+    REQUEST_COMMENTS,
     FETCH_COMMENTS,
-    ADD_COMMENT,
-    DELETE_COMMENT,
-    UPDATE_VOTE,
-    SET_CATEGORY,
-    SET_PREVIOUS,
+    ADD_COMMENTS,
+    UPDATE_COMMENTS,
+    DELETE_COMMENTS,
+    UPDATE_VOTE_COMMENTS
 } from '../actions'
 
 
 function posts (state = {}, { type, data }) {
-    console.log('type', type, 'data', data)
+    //console.log('type', type, 'data', data)
     switch (type) {
         case FETCH_POSTS :
             // convert array to obj
-            return data.reduce((obj, item) => {
+           return data.reduce((obj, item) => {
                 obj[item.id] = item
                 return obj
-            }, [...state]);
+            }, {...state});
 
-        case FETCH_COMMENTS :
-            if(data && data[0] && data[0].parentId){
-                return {
-                    ...state,
-                    [data[0].parentId]: {
-                        ...state[data[0].parentId],
-                      comments: data
-                    }
-                }
-            }else{
-                return state
-            }
-        case ADD_COMMENT:
-            return {
-                ...state,
-                [data.parentId]: {
-                    ...state[data.parentId],
-                  comments: [data, ...state[data.parentId]['comments']]
-                }
-            }
-        case DELETE_COMMENT:
-            console.log("DELETE_COMMENT")
-            return state
+        case ADD_POSTS :
+        case UPDATE_POSTS:
+            return { ...state, [data.id]:data}
 
-        case UPDATE_VOTE:
+        case DELETE_POSTS:
+            const { [data.id]:value, ...newState } = state
+            return newState
+
+        case UPDATE_VOTE_POSTS:
             return {
                 ...state,
                 [data.id]:{
@@ -56,70 +45,92 @@ function posts (state = {}, { type, data }) {
                 }
             }
 
-        case DELETE_POST:
-            return state
-
         default :
             return state
     }
 }
 
-/*function comments (state = {}, { type, data }) {
+function comments (state = {}, { type, data }) {
     switch (type) {
         case FETCH_COMMENTS :
+            // convert array to obj
+            const results = data.results;
+            const obj =  results.reduce((obj, item) => {
+                obj[item.id] = item
+                return obj
+            }, {});
+            return {...state, ...obj}
 
-            console.log('FETCH_COMMENTS >>>>>---- ', data, {
-                ...state,
-                [data.parentId]: {
-                  data
-                }
-            })
+        case ADD_COMMENTS:
+        case UPDATE_COMMENTS:
+            return { ...state, [data.id]:data}
+
+        case DELETE_COMMENTS:
+            const { [data.id]:value, ...newState } = state
+            return newState
+
+        case UPDATE_VOTE_COMMENTS:
             return {
                 ...state,
-                [data.parentId]: {
-                  data
+                [data.id]:{
+                    ...state[data.id],
+                    voteScore:data.voteScore
                 }
             }
+
         default :
             return state
     }
-}*/
-const initialCatState = [{name:'all', pathabs:'/'}];
-function categories (state = [], { type, data }){
-    switch (type) {
-        case FETCH_CATEGORIES :
-            return [...initialCatState, ...data.categories]
-        default :
-          return state
-      }
 }
 
-/*function category (state = 'all', action){
-    switch (action.type) {
-        case SET_CATEGORY :
-            const { category } = action
-            return category;
+function categories (state = [ {name:'all', pathabs:'/'} ], { type, data }){
+    switch (type) {
+        case FETCH_CATEGORIES :
+            return [...state, ...data.categories]
         default :
           return state
-      }
-}*/
+    }
+}
 
-function previous(state = {pathname: '/'}, action){
-    switch (action.type) {
-        case SET_PREVIOUS :
-            const { pathname } = action
-            return {
-                pathname: pathname,
+const initialLoadState = { post:false, categories:false, comments:false, commentsObj:{}};
+function loaded(state = initialLoadState, {type, data}){
+    switch (type) {
+        case FETCH_POSTS :
+            return { ...state, posts:true }
+
+        case FETCH_CATEGORIES :
+            return { ...state, categories:true }
+
+        case REQUEST_COMMENTS :
+            return { ...state,
+                commentsObj:{
+                    ...state.commentsObj,
+                    [data.parentId]:false
+                }
             }
-        default :
-          return state
-      }
 
+        case FETCH_COMMENTS :
+            let newState =  { ...state,
+                commentsObj:{
+                    ...state.commentsObj,
+                    [data.parentId]:true,
+                }
+            }
+
+            // are all comment request completed
+            const commentsArray = Object.values(newState.commentsObj).filter(b => !b);
+            newState.comments = commentsArray.length===0;
+            return newState
+
+
+        default :
+            return state
+    }
 }
 
 export default combineReducers({
     posts,
+    comments,
     categories,
-    /*category,*/
-    previous,
+    loaded
 })
