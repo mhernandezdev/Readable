@@ -23,12 +23,11 @@ class Reply extends Component {
     handlePost = (e) => {
         e.preventDefault();
 
-        // some validation
         const { author, body } = this.state;
-        this.setState({ authorFail:author==='', bodyFail:body==='' });
 
-        const {authorFail, bodyFail} = this.state;
-        if(!authorFail || !bodyFail){
+        // some validation
+        this.setState({ authorFail:author==='', bodyFail:body==='' });
+        if(author!=='' || body!==''){
             // call addComment
             const data = {
                 parentId: this.props.parentId,

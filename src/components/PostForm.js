@@ -48,13 +48,11 @@ class PostForm extends Component {
 
         const { type, mode, post } = this.props;
         const { id, parentId } = post;
+        const { category, author, title, body } = this.state;
 
         // some validation
-        const { category, author, title, body } = this.state;
         this.setState({ authorFail:author==='', titleFail:title==='', bodyFail:body==='' });
-
-        const { authorFail, titleFail, bodyFail } = this.state;
-        if(!authorFail && !bodyFail && (type!=='posts' || !titleFail)){
+        if(author!=='' && !body!=='' && (type!=='posts' || title!=='')){
             // format body info
             const data = {
                 category,

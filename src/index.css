@@ -193,6 +193,7 @@ header h1{
     display: inline-block;
     margin-bottom: .5rem;
     color: #f36c32;
+    text-decoration: underline;
 }
 
 .post-vote{
