@@ -13,6 +13,7 @@ Udacity React Readable project: Content and comment web app. Users can post cont
 
 * In another terminal window, clone this Repo with:
     - `git clone https://github.com/mhernandezdev/Readable.git`
+    - `cd Readable`
     - `npm install`
     - `npm start`
 
