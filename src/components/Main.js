@@ -55,7 +55,7 @@ class Main extends Component {
                 </div>
 
                 <Link
-                to={`/category/${category}/create`}
+                to={`/${category}/create`}
                 className='add-comment'
                 > <FaPlusCircle size={60}/> </Link>
 

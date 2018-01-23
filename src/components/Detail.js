@@ -45,18 +45,18 @@ class Detail extends Component {
 
     render() {
         const { posts, comments, create } = this.props;
-        const {category, id, parentid} = this.props.match.params;
+        const {category, post_id, parent_id} = this.props.match.params;
         const { edit, deleteModalOpen } = this.state;
 
         // back link
-        let linkTo = (category && `/category/${category}`) || `/`;
-        if(id && parentid){
-            linkTo += `/post/${parentid}`;
+        let linkTo = (category && `/${category}`) || `/`;
+        if(post_id && parent_id){
+            linkTo += `/${parent_id}`;
         }
         this.linkTo = linkTo;
 
         //const me = post;
-        const me = posts[id] || comments[id];
+        const me = posts[post_id] || comments[post_id];
         const type = me && me.parentId ? 'comments' : 'posts';
         this.post = me;
 
@@ -77,7 +77,7 @@ class Detail extends Component {
                     <h1>{create ? 'Create' : 'Detail'}</h1>
 
                     {/* form or single comment */}
-                    { !edit && me && <Post post={me} category={category} id={id} detail={true}></Post> }
+                    { !edit && me && <Post post={me} category={category} id={post_id} detail={true}></Post> }
                     { (create || edit) &&
                         <PostForm post={me}
                         type={type}

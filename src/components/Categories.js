@@ -17,7 +17,7 @@ const Categories = (props) => {
                     <li key={c.name}>
                         <NavLink exact
                         key={c.name}
-                        to={c.pathabs || `/category/${c.path}`}
+                        to={c.pathabs || `/${c.path}`}
                         className={c.name==='all' && category==='all' ? 'selected' : ''}
                         activeClassName='selected'
                         >{capitalize(c.name)}</NavLink>

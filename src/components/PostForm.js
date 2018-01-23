@@ -27,13 +27,6 @@ class PostForm extends Component {
         bodyFail:false
     }
 
-    componentDidMount(){
-        console.log(this.props)
-    }
-    componentWillReceiveProps(nextProps){
-        console.log('nextProps', nextProps)
-    }
-
     categoriesChange= (e) => {
         this.setState({ category: e.target.value });
     }

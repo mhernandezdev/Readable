@@ -12,11 +12,11 @@ const Post = (props) => {
     const { post, category, id, comments, detail } = props;
 
     // link based on URL // direct to post or comment
-    let linkTo = `/category/${category}/post/${post.id}`;
+    let linkTo = `/${category}/${post.id}`;
 
     // if an id on the url then we are already on a post details page - opening a child comment
     if(id && post && post.parentId){
-        linkTo = `/category/${category}/post/${post.parentId}/${post.id}`;
+        linkTo = `/${category}/${post.parentId}/${post.id}`;
     }
 
     // get comments // list newest to oldest
