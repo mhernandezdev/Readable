@@ -1,7 +1,7 @@
 ## Readable
 Udacity React Readable project: Content and comment web app. Users can post content to predefined categories, comment on their posts and other users' posts, and vote on posts and comments. Users can also edit and delete posts and comments.
 
-## Running Readable
+## To Run
 
 * Install and start the API server
     - `git clone https://github.com/udacity/reactnd-project-readable-starter.git`
