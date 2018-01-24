@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { deletePost } from '../actions'
 import Modal from 'react-modal'
@@ -36,9 +37,9 @@ class Detail extends Component {
 
     deleteYes(){
         // if yes // calls back button //calls action
-        const { id } = this.props.match.params;
+        const { post_id } = this.props.match.params;
         const post = this.post;
-        this.props.deletePost({ type:post.parentId ? 'comments' : 'posts' , id:id, parentId:post.parentId });
+        this.props.deletePost({ type:post.parentId ? 'comments' : 'posts' , id:post_id, parentId:post.parentId });
         this.setState(() => { return { deleteModalOpen: false } });
         this.props.history.push(this.linkTo);
     }
@@ -53,13 +54,15 @@ class Detail extends Component {
         if(post_id && parent_id){
             linkTo += `/${parent_id}`;
         }
+        if(category==='all' && !parent_id){
+            linkTo =  `/`;
+        }
         this.linkTo = linkTo;
 
-        //const me = post;
+
         const me = posts[post_id] || comments[post_id];
         const type = me && me.parentId ? 'comments' : 'posts';
         this.post = me;
-
 
         return (
             <div className="detail">
@@ -110,10 +113,8 @@ function mapStateToProps({ posts, comments }) {
   return { posts, comments }
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        deletePost: (data) => dispatch(deletePost(data)),
-    }
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ deletePost }, dispatch);
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Detail));

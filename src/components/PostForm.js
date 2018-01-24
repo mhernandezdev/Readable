@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { addPost, updatePost } from '../actions'
 
@@ -119,11 +120,9 @@ class PostForm extends Component {
 function mapStateToProps({ categories }) {
     return { categories }
 }
-function mapDispatchToProps (dispatch) {
-    return {
-        addPost: (data) => dispatch(addPost(data)),
-        updatePost: (data) => dispatch(updatePost(data))
-    }
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ addPost, updatePost }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostForm);

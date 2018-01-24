@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter, Switch, Route, matchPath } from 'react-router-dom'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { fetchPosts, fetchCategories } from '../actions'
 import Main from './Main'
@@ -60,13 +61,12 @@ class App extends React.Component {
     render(){
         return(
             <Switch>
+                <Route path="/404" component={Error404}/>
                 <Route path="/:category/create" component={Create} />
                 <Route path="/:category/:parent_id/:post_id" component={Detail} />
                 <Route path="/:category/:post_id" component={Detail} />
-                <Route path="/404" component={Error404}/>
                 <Route path='/:category' component={Main} />
-                <Route exact path='/' component={Main} />
-                <Route component={Error404}/>
+                <Route component={Main} />
             </Switch>
         )
     }
@@ -76,11 +76,8 @@ function mapStateToProps ({ categories, posts, comments, loaded }) {
     return { categories, posts, comments, loaded };
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        fetchPosts: () => dispatch(fetchPosts()),
-        fetchCategories: () => dispatch(fetchCategories())
-    }
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ fetchPosts, fetchCategories }, dispatch);
 }
 
 export default withRouter(connect(

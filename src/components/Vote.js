@@ -1,4 +1,5 @@
 import React from 'react'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
@@ -24,10 +25,8 @@ const Vote = ({ post, updateVote }) => {
     )
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        updateVote: (data) => dispatch(updateVote(data))
-    }
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ updateVote }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(Vote);

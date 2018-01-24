@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { addPost } from '../actions'
 
@@ -81,10 +82,8 @@ class Reply extends Component {
     }
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        addPost: (data) => dispatch(addPost(data))
-    }
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ addPost }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(Reply);
