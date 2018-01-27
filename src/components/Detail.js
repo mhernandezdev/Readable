@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { deletePost } from '../actions'
+import { deletePost } from '../actions/APIActions'
 import Modal from 'react-modal'
 import Post from './Post'
 import PostForm from './PostForm'

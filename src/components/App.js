@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter, Switch, Route, matchPath } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { fetchPosts, fetchCategories } from '../actions'
+import { fetchPosts, fetchCategories } from '../actions/APIActions'
 import Main from './Main'
 import Create from './Create'
 import Detail from './Detail'

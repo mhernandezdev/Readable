@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
-import { updateVote } from '../actions'
+import { updateVote } from '../actions/APIActions'
 
 const Vote = ({ post, updateVote }) => {
 

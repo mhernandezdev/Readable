@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { addPost } from '../actions'
+import { addPost } from '../actions/APIActions'
 
 class Reply extends Component {
     state = {

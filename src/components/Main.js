@@ -1,29 +1,32 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import Post from './Post'
 import Categories from './Categories'
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle'
+import { sortOn } from '../actions/sortonActions'
 
 class Main extends Component {
-    state = {
+    /*state = {
         sorton:'newest',
-    }
+    }*/
 
     sortOnChange(e){
-        this.setState({sorton: e.target.value});
+        //this.setState({sorton: e.target.value});
+        this.props.sortOn( e.target.value );
     }
 
     render() {
-        const { categories, posts } = this.props;
-        const { sorton } = this.state;
+        const { categories, posts, sort } = this.props;
+        //const { sorton } = this.state;
 
         const category = this.props.match.params.category || 'all';
 
         // reduce by category and sort // convert post into an array
         const postArray = Object.values(posts);
         const postFiltered = (category==='all' && postArray) || postArray.filter(post => post.category === category);
-        const postSorted = (sorton==="newest" && postFiltered.sort((a, b) => b.timestamp > a.timestamp)) ||
+        const postSorted = (sort==="newest" && postFiltered.sort((a, b) => b.timestamp > a.timestamp)) ||
         postFiltered.sort((a, b) => b.voteScore > a.voteScore);
 
         return (
@@ -41,7 +44,7 @@ class Main extends Component {
 
                         <div className="column col-2">
                             <h2>Comments:
-                                <select className="sort-on" value={sorton} onChange={(e) => this.sortOnChange(e)}>
+                                <select className="sort-on" value={sort} onChange={(e) => this.sortOnChange(e)}>
                                     <option value="newest">Sort on: Newest</option>
                                     <option value="likes">Sort on: Likes</option>
                                 </select>
@@ -64,11 +67,15 @@ class Main extends Component {
   }
 }
 
-function mapStateToProps ({ categories, posts }) {
-    return { categories, posts };
+function mapStateToProps ({ categories, posts, sort }) {
+    return { categories, posts, sort };
+}
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ sortOn }, dispatch);
 }
 
 export default withRouter(connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Main))
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { addPost, updatePost } from '../actions'
+import { addPost, updatePost } from '../actions/APIActions'
 
 class PostForm extends Component {
     static defaultProps = {
