@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch'
 
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
+export const SELECTED_CATEGORY = 'SELECTED_CATEGORY'
 
 export const FETCH_POSTS = 'FETCH_POSTS'
 export const UPDATE_POSTS = 'UPDATE_POSTS'
@@ -35,6 +36,12 @@ export function fetchCategories(){
             })
         })
 }
+export function setSelectedCategory (category) {
+    return {
+        type: SELECTED_CATEGORY,
+        data:category
+    }
+}
 
 export function fetchPosts(){
     return dispatch => fetch(`${API}/posts`, {
@@ -59,6 +66,7 @@ export function fetchPosts(){
 }
 
 export function updatePost({type, body, id}){
+    console.log('updatePost', type, JSON.stringify(body))
     return dispatch => fetch(`${API}/${type}/${id}`, {
         method: 'PUT',
         headers: {
@@ -77,6 +85,7 @@ export function updatePost({type, body, id}){
 }
 
 export function addPost ({type, body}) {
+    console.log('addPost', type, JSON.stringify(body))
     return dispatch => fetch(`${API}/${type}`, {
         method: 'POST',
         headers: {

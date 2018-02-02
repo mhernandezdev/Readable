@@ -1,5 +1,6 @@
 import {
     FETCH_CATEGORIES,
+    SELECTED_CATEGORY,
 
     FETCH_POSTS,
     UPDATE_POSTS,
@@ -18,7 +19,6 @@ import {
 
 
 export function posts (state = {}, { type, data }) {
-    //console.log('type', type, 'data', data)
     switch (type) {
         case FETCH_POSTS :
             // convert array to obj
@@ -29,12 +29,12 @@ export function posts (state = {}, { type, data }) {
 
         case ADD_POSTS :
         case UPDATE_POSTS:
-            return { ...state, [data.id]:data}
+            return { ...state, [data.id]:data }
 
-        case DELETE_POSTS:
+        case DELETE_POSTS: {
             const { [data.id]:value, ...newState } = state
             return newState
-
+        }
         case UPDATE_VOTE_POSTS:
             return {
                 ...state,
@@ -51,23 +51,23 @@ export function posts (state = {}, { type, data }) {
 
 export function comments (state = {}, { type, data }) {
     switch (type) {
-        case FETCH_COMMENTS :
+        case FETCH_COMMENTS : {
             // convert array to obj
             const results = data.results;
             const obj =  results.reduce((obj, item) => {
                 obj[item.id] = item
                 return obj
             }, {});
-            return {...state, ...obj}
-
+            return {...state, ...obj }
+        }
         case ADD_COMMENTS:
         case UPDATE_COMMENTS:
-            return { ...state, [data.id]:data}
+            return { ...state, [data.id]:data }
 
-        case DELETE_COMMENTS:
+        case DELETE_COMMENTS: {
             const { [data.id]:value, ...newState } = state
             return newState
-
+        }
         case UPDATE_VOTE_COMMENTS:
             return {
                 ...state,
@@ -82,10 +82,16 @@ export function comments (state = {}, { type, data }) {
     }
 }
 
-export function categories (state = [ {name:'all', pathabs:'/'} ], { type, data }){
+export function categories (state = {selected:'all', names:[ {name:'all', pathabs:'/'} ]}, { type, data }){
+
     switch (type) {
         case FETCH_CATEGORIES :
-            return [...state, ...data.categories]
+            return {...state, names:[...state.names, ...data.categories] }
+
+        case SELECTED_CATEGORY :
+        console.log('categories', data)
+            return {...state, selected:data }
+
         default :
           return state
     }
@@ -108,11 +114,11 @@ export function loaded(state = initialLoadState, {type, data}){
                 }
             }
 
-        case FETCH_COMMENTS :
+        case FETCH_COMMENTS : {
             let newState =  { ...state,
                 commentsObj:{
                     ...state.commentsObj,
-                    [data.parentId]:true,
+                    [data.parentId]:true
                 }
             }
 
@@ -120,7 +126,7 @@ export function loaded(state = initialLoadState, {type, data}){
             const commentsArray = Object.values(newState.commentsObj).filter(b => !b);
             newState.comments = commentsArray.length===0;
             return newState
-
+        }
 
         default :
             return state

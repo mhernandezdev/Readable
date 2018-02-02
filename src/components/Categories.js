@@ -4,7 +4,7 @@ import { capitalize } from '../utils/helpers'
 
 const Categories = (props) => {
 
-    /* all selected for '/' and 'category/all' */
+    /* all selected for '/' */
     const { categories } = props;
     const { category } = props.match.params;
 
@@ -13,7 +13,7 @@ const Categories = (props) => {
             <h2>Categories:</h2>
 
             <ul className="categories">
-                {categories && categories.map(c => (
+                {categories && categories.names.map(c => (
                     <li key={c.name}>
                         <NavLink exact
                         key={c.name}

@@ -14,8 +14,8 @@ class PostForm extends Component {
             id: Math.random().toString(36).substr(-8),
             parentId:''
         },
-        type:'comments',
-        mode:'edit'
+        mode:'new',
+        formCompleted:function(){}
     }
 
     state = {
@@ -40,33 +40,32 @@ class PostForm extends Component {
     handlePost = (e) => {
         e.preventDefault();
 
-        const { type, mode, post } = this.props;
-        const { id, parentId } = post;
+        const { mode, post } = this.props;
+        const { id } = post;
         const { category, author, title, body } = this.state;
 
         // some validation
         this.setState({ authorFail:author==='', titleFail:title==='', bodyFail:body==='' });
-        if(author!=='' && !body!=='' && (type!=='posts' || title!=='')){
+        if(author!=='' && body!=='' && title!==''){
             // format body info
             const data = {
                 category,
-                parentId,
                 id,
                 author,
                 title,
                 body,
-                timestamp: Date.now(),
+                timestamp: Date.now()
             }
-            //console.log('mode', mode, 'data',data)
+            console.log(post, 'mode', mode, 'data',data)
 
-            this.props[(mode==='edit' && 'updatePost') || 'addPost']({ type:type, body:data, id:id });
+            this.props[(mode==='new' && 'addPost') || 'updatePost']({ type:'posts', body:data, id });
 
-            this.props.edit();
+            this.props.formCompleted( true );
         }
     }
 
     render() {
-        const { type, categories } = this.props;
+        const { mode, categories } = this.props;
         const { category, author, title, body, authorFail, titleFail, bodyFail } = this.state;
 
         return (
@@ -74,11 +73,11 @@ class PostForm extends Component {
 
                     <form onSubmit={this.handlePost}>
 
-                        {type==='posts' && <select className="" value={category} onChange={(e) => this.categoriesChange(e)}>
-                            {categories.map(c => (c.name!=='all' &&
+                        <select className="" value={category} onChange={(e) => this.categoriesChange(e)}>
+                            {categories.names.map(c => (c.name!=='all' &&
                                 <option key={c.name} value={c.name}>{c.name}</option>
                             ))}
-                        </select>}
+                        </select>
 
                         <input
                         type="text"
@@ -89,7 +88,7 @@ class PostForm extends Component {
                         className={ authorFail ? 'FAIL' : '' }
                         />
 
-                        {type==='posts' && <input
+                        <input
                         type="text"
                         placeholder="Title"
                         name="title"
@@ -97,7 +96,6 @@ class PostForm extends Component {
                         onChange={ this.handleTextChange }
                         className={ titleFail ? 'FAIL' : '' }
                         />
-                        }
 
                         <textarea
                         placeholder="Comment"
@@ -108,8 +106,8 @@ class PostForm extends Component {
                         />
 
 
-                        <div className="button" onClick={() => this.props.edit()}>Cancel</div>
-                        <button type="submit">Post</button>
+                        <div className="button" onClick={() => this.props.formCompleted()}>Cancel</div>
+                        <button type="submit">{ (mode==='new' && 'Post') || 'Save' }</button>
                     </form>
 
             </div>

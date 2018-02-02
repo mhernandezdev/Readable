@@ -6,20 +6,23 @@ import Post from './Post'
 import Categories from './Categories'
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle'
 import { sortOn } from '../actions/sortonActions'
+import { setSelectedCategory } from '../actions/APIActions'
 
 class Main extends Component {
-    /*state = {
-        sorton:'newest',
-    }*/
+
+    componentWillReceiveProps(nextProps){
+        // storing category for back button
+        const { categories, setSelectedCategory } = this.props;
+        const category = nextProps.match.params.category || 'all';
+        category !== categories.selected && setSelectedCategory(category);
+    }
 
     sortOnChange(e){
-        //this.setState({sorton: e.target.value});
         this.props.sortOn( e.target.value );
     }
 
     render() {
         const { categories, posts, sort } = this.props;
-        //const { sorton } = this.state;
 
         const category = this.props.match.params.category || 'all';
 
@@ -43,7 +46,7 @@ class Main extends Component {
                         </div>
 
                         <div className="column col-2">
-                            <h2>Comments:
+                            <h2>Posts:
                                 <select className="sort-on" value={sort} onChange={(e) => this.sortOnChange(e)}>
                                     <option value="newest">Sort on: Newest</option>
                                     <option value="likes">Sort on: Likes</option>
@@ -51,14 +54,14 @@ class Main extends Component {
                             </h2>
 
                             {postSorted && postSorted.map(post => (
-                                <Post key={post.id} category={category} post={post} ></Post>
+                                <Post key={post.id} post={post} ></Post>
                             ))}
                         </div>
                     </div>
                 </div>
 
                 <Link
-                to={`/${category}/create`}
+                to={`/create`}
                 className='add-comment'
                 > <FaPlusCircle size={60}/> </Link>
 
@@ -71,7 +74,7 @@ function mapStateToProps ({ categories, posts, sort }) {
     return { categories, posts, sort };
 }
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ sortOn }, dispatch);
+    return bindActionCreators({ sortOn, setSelectedCategory }, dispatch);
 }
 
 export default withRouter(connect(

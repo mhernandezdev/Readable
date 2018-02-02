@@ -182,6 +182,9 @@ header h1{
 
 .post-reply-txt{
     margin-right: 15px;
+    margin-bottom: .5rem;
+    color: #000;
+    display: inline-block;
 }
 
 .post-comment .post-reply-txt{
@@ -190,9 +193,14 @@ header h1{
 
 .post-add-reply-txt{
     cursor: pointer;
-    display: inline-block;
     margin-bottom: .5rem;
     color: #f36c32;
+    display: inline-block;
+    padding: 10px;
+    background: #f3f3f3;
+}
+
+.post-add-reply-txt-link{
     text-decoration: underline;
 }
 
@@ -207,7 +215,7 @@ header h1{
     left: 0;
     color: #ffffff;
     background: #247fc1;
-    border-radius: 50%;
+    border-radius: 30%;
     width: 22px;
     height: 22px;
     line-height: 20px;
@@ -291,6 +299,36 @@ input.FAIL, textarea.FAIL{
     bottom: 25px;
 }
 
+
+.post-controls{
+    float: right;
+}
+.post-menu{
+    display: inline-block;
+    position: relative;
+    float: right;
+}
+.post-menu-flyout{
+    /*display: none;
+    position: absolute;
+    border: 1px solid #a3a3a3;
+    padding: 10px;
+    right: 20px;
+    top: 0;
+    background: #FFF;*/
+    display: inline-block;
+    float: right;
+}
+.post-menu-flyout.OPENED{
+    display: block;
+}
+.post-control-btn{
+    color: #f36c32;
+    text-decoration: underline;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+}
 
 /* child ui */
 .header-child{

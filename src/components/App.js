@@ -17,11 +17,10 @@ class App extends React.Component {
 
     componentDidUpdate() {
         // 404 logic // ensure loaded // validate urls
-        // over complicated but the url-params presented themself as challenging
         const { categories, posts, comments, loaded } = this.props;
         const pathname = this.props.location.pathname;
 
-        // simplified urls require allowing few exception
+        // validation exceptions
         const exceptions = ['404','create'];
 
         let match;
@@ -30,7 +29,7 @@ class App extends React.Component {
             match = matchPath(pathname, { path: '/:category' });
             if(match){
                 const { category } = match.params;
-                if(category && exceptions.indexOf(category)===-1 && categories.filter(c => c.name===category).length===0){
+                if(category && exceptions.indexOf(category)===-1 && categories.names.filter(c => c.name===category).length===0){
                     this.props.history.push("/404");
                     return;
                 }
@@ -47,26 +46,17 @@ class App extends React.Component {
                 }
             }
 
-            match = matchPath(pathname, { path: '/:category/:parent_id/:post_id' });
-            if(match){
-                const { post_id } = match.params;
-                if(post_id && !posts[post_id] && !comments[post_id]){
-                    this.props.history.push("/404");
-                    return;
-                }
-            }
         }
     }
 
     render(){
         return(
             <Switch>
-                <Route path="/404" component={Error404}/>
-                <Route path="/:category/create" component={Create} />
-                <Route path="/:category/:parent_id/:post_id" component={Detail} />
-                <Route path="/:category/:post_id" component={Detail} />
-                <Route path='/:category' component={Main} />
-                <Route component={Main} />
+                <Route path="/404" component={ Error404 }/>
+                <Route path="/create" component={ Create } />
+                <Route path="/:category/:post_id" component={ Detail } />
+                <Route path='/:category' component={ Main } />
+                <Route component={ Main } />
             </Switch>
         )
     }
