@@ -70,7 +70,7 @@ class CommentForm extends Component {
                     />
 
                     <textarea
-                    placeholder="Leave a reply"
+                    placeholder="Content for your comment"
                     name="body"
                     value={body}
                     onChange={this.handleTextChange}

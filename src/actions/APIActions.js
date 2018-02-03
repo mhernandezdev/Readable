@@ -66,7 +66,6 @@ export function fetchPosts(){
 }
 
 export function updatePost({type, body, id}){
-    console.log('updatePost', type, JSON.stringify(body))
     return dispatch => fetch(`${API}/${type}/${id}`, {
         method: 'PUT',
         headers: {
@@ -85,7 +84,6 @@ export function updatePost({type, body, id}){
 }
 
 export function addPost ({type, body}) {
-    console.log('addPost', type, JSON.stringify(body))
     return dispatch => fetch(`${API}/${type}`, {
         method: 'POST',
         headers: {

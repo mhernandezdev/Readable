@@ -56,7 +56,6 @@ class PostForm extends Component {
                 body,
                 timestamp: Date.now()
             }
-            console.log(post, 'mode', mode, 'data',data)
 
             this.props[(mode==='new' && 'addPost') || 'updatePost']({ type:'posts', body:data, id });
 
@@ -65,7 +64,7 @@ class PostForm extends Component {
     }
 
     render() {
-        const { mode, categories } = this.props;
+        const { mode, categories, formCompleted } = this.props;
         const { category, author, title, body, authorFail, titleFail, bodyFail } = this.state;
 
         return (
@@ -98,7 +97,7 @@ class PostForm extends Component {
                         />
 
                         <textarea
-                        placeholder="Comment"
+                        placeholder="Content for your post"
                         name="body"
                         value={ body }
                         onChange={ this.handleTextChange }
@@ -106,7 +105,7 @@ class PostForm extends Component {
                         />
 
 
-                        <div className="button" onClick={() => this.props.formCompleted()}>Cancel</div>
+                        <div className="button" onClick={() => formCompleted()}>Cancel</div>
                         <button type="submit">{ (mode==='new' && 'Post') || 'Save' }</button>
                     </form>
 

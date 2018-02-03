@@ -83,13 +83,11 @@ export function comments (state = {}, { type, data }) {
 }
 
 export function categories (state = {selected:'all', names:[ {name:'all', pathabs:'/'} ]}, { type, data }){
-
     switch (type) {
         case FETCH_CATEGORIES :
             return {...state, names:[...state.names, ...data.categories] }
 
         case SELECTED_CATEGORY :
-        console.log('categories', data)
             return {...state, selected:data }
 
         default :
